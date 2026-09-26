@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}My applications | Commonplace Careers{% endblock %}
+{% block content %}
+<section class="dashboard-section"><div class="container"><div class="dashboard-heading"><div><p class="eyebrow">YOUR WORKSPACE</p><h1>Good things <em>in motion.</em></h1></div><a class="button button-dark" href="{{ url_for('index') }}#open-roles">Explore roles <span aria-hidden="true">↗</span></a></div>
+  <div class="dashboard-subhead"><h2>Your applications</h2><span>{{ applications|length }} sent</span></div>
+  {% if applications %}<div class="application-list">{% for application in applications %}<article class="application-row"><div class="application-main"><p class="job-company">{{ application.company }}</p><h3><a href="{{ url_for('job_detail', job_id=application.job_id) }}">{{ application.title }}</a></h3><p class="job-meta">{{ application.location }} <span>·</span> Sent {{ application.created_at[:10] }}</p></div><span class="status-pill status-{{ application.status|lower|replace(' ', '-') }}">{{ application.status }}</span></article>{% endfor %}</div>{% else %}<div class="empty-state dashboard-empty"><span class="empty-mark">↗</span><h3>Your next step starts somewhere.</h3><p>You haven't sent an application yet. Browse the board and find a role that feels right.</p><a class="button button-outline" href="{{ url_for('index') }}#open-roles">Browse open roles</a></div>{% endif %}
+</div></section>
+{% endblock %}

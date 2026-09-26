@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }} at {{ job.company }} | Commonplace Careers{% endblock %}
+{% block content %}
+<section class="detail-section"><div class="container detail-container"><a class="back-link" href="{{ url_for('index') }}">← All roles</a>
+  <div class="detail-header"><div class="job-company-mark detail-mark">{{ job.company[0]|upper }}</div><div><p class="job-company">{{ job.company }} <span class="company-separator">/</span> {{ job.category }}</p><h1>{{ job.title }}</h1><div class="detail-tags"><span>{{ job.location }}</span><span>{{ job.employment_type }}</span>{% if job.salary %}<span>{{ job.salary }}</span>{% endif %}</div></div></div>
+  <div class="detail-layout"><article class="detail-copy"><p class="eyebrow">THE ROLE</p><h2>What you'll do</h2>{% for paragraph in job.description.split('\n\n') %}<p>{{ paragraph }}</p>{% endfor %}<div class="detail-note"><span class="note-pin"></span><span>Good work is a two-way fit. Ask the questions that matter to you.</span></div></article>
+  <aside class="apply-panel" id="apply"><p class="eyebrow">YOUR NEXT STEP</p><h2>Make it yours.</h2>
+    {% if applied %}<div class="already-applied"><span>✓</span><p>You're in the running.<br><small>Check your dashboard for updates.</small></p></div>
+    {% elif not g.user %}<p>Sign in or create a seeker account to send your application.</p><a class="button button-dark w-100" href="{{ url_for('login') }}">Sign in to apply <span aria-hidden="true">↗</span></a><a class="apply-secondary" href="{{ url_for('register') }}">New here? Create an account</a>
+    {% elif g.user['role'] == 'seeker' %}<p>Tell the team what brings you to this role.</p><form method="post" action="{{ url_for('apply', job_id=job.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label class="form-label" for="cover_letter">A note to the team</label><textarea class="form-control" id="cover_letter" name="cover_letter" rows="6" maxlength="5000" required placeholder="What feels like a good fit about this role?"></textarea><label class="form-label mt-3" for="resume_url">Resume link <span class="optional-label">optional</span></label><input class="form-control" id="resume_url" name="resume_url" type="url" placeholder="https://"><button class="button button-dark w-100 form-submit" type="submit">Send application <span aria-hidden="true">↗</span></button></form>
+    {% else %}<p>Employer and admin accounts can't apply to job listings.</p>{% endif %}
+  </aside></div>
+</div></section>
+{% endblock %}

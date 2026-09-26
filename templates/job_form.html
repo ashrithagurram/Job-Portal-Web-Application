@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Post a role' if mode == 'create' else 'Edit listing' }} | Commonplace Careers{% endblock %}
+{% block content %}
+<section class="dashboard-section"><div class="container narrow-container"><a class="back-link" href="{{ url_for('employer_dashboard') }}">← Employer workspace</a><div class="page-heading"><p class="eyebrow">{{ 'MAKE A GOOD MATCH' if mode == 'create' else 'KEEP IT CURRENT' }}</p><h1>{{ 'Put a good role' if mode == 'create' else 'Shape your' }}<br><em>{{ 'out there.' if mode == 'create' else 'listing.' }}</em></h1></div>
+  <form class="listing-form" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="form-grid"><div class="wide-field"><label class="form-label" for="title">Role title</label><input class="form-control" id="title" name="title" required maxlength="120" value="{{ request.form.get('title', job.title if job else '') }}" placeholder="e.g. Product Designer"></div>
+      <div><label class="form-label" for="location">Location</label><input class="form-control" id="location" name="location" required maxlength="120" value="{{ request.form.get('location', job.location if job else '') }}" placeholder="City, state or remote"></div>
+      <div><label class="form-label" for="category">Discipline</label><input class="form-control" id="category" name="category" required value="{{ request.form.get('category', job.category if job else '') }}" placeholder="e.g. Design"></div>
+      <div><label class="form-label" for="employment_type">Employment type</label><select class="form-select" id="employment_type" name="employment_type" required>{% for kind in ['Full-time', 'Part-time', 'Contract', 'Internship', 'Temporary'] %}<option value="{{ kind }}" {% if request.form.get('employment_type', job.employment_type if job else 'Full-time') == kind %}selected{% endif %}>{{ kind }}</option>{% endfor %}</select></div>
+      <div><label class="form-label" for="salary">Salary range</label><input class="form-control" id="salary" name="salary" maxlength="80" value="{{ request.form.get('salary', job.salary if job else '') }}" placeholder="e.g. $95k – $120k"></div>
+      <div class="wide-field"><label class="form-label" for="description">About the role</label><textarea class="form-control" id="description" name="description" rows="10" maxlength="10000" required placeholder="Describe the work, the team, and what makes this opportunity worth a closer look.">{{ request.form.get('description', job.description if job else '') }}</textarea></div>
+    </div><div class="form-actions"><a class="button button-outline" href="{{ url_for('employer_dashboard') }}">Cancel</a><button class="button button-dark" type="submit">{{ 'Publish listing' if mode == 'create' else 'Save changes' }} <span aria-hidden="true">↗</span></button></div>
+  </form>
+</div></section>
+{% endblock %}

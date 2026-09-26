@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Find work that fits | Commonplace Careers{% endblock %}
+{% block content %}
+<section class="hero-band">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="eyebrow-dot"></span> GOOD WORK, FOUND HERE</p>
+      <h1>Find work that<br><em>fits your life.</em></h1>
+      <p class="hero-subtitle">A considered collection of roles from teams doing meaningful work. Less noise, more of what could be next.</p>
+      <a class="text-link" href="#open-roles">Explore open roles <span aria-hidden="true">↓</span></a>
+    </div>
+    <div class="hero-art" aria-label="Illustration of a person looking across a landscape of opportunities" role="img">
+      <img class="hero-photo" src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&amp;fit=crop&amp;w=1200&amp;q=85" alt="A small team collaborating around a table">
+      <div class="art-sun"></div><div class="art-orbit"></div>
+      <div class="art-note note-top"><span class="note-pin"></span><span>room to grow</span></div>
+      <div class="art-note note-bottom"><span class="note-number">01</span><span>work, with intention</span></div>
+      <div class="art-hill hill-back"></div><div class="art-hill hill-front"></div>
+      <div class="art-path"></div><div class="art-person"><span class="person-head"></span><span class="person-body"></span><span class="person-bag"></span></div>
+      <span class="art-spark spark-one">✳</span><span class="art-spark spark-two">✳</span>
+    </div>
+  </div>
+</section>
+<section class="search-section" aria-label="Search job listings">
+  <div class="container">
+    <form class="search-bar" method="get" action="{{ url_for('index') }}">
+      <label class="search-field"><span class="field-icon">⌕</span><span class="visually-hidden">Search roles or companies</span><input name="q" value="{{ filters.q }}" placeholder="Role, skill, or company" aria-label="Role, skill, or company"></label>
+      <label class="search-field"><span class="field-icon">⌖</span><span class="visually-hidden">Location</span><input name="location" value="{{ filters.location }}" placeholder="City or remote" aria-label="City or remote"></label>
+      <label class="search-field search-select"><span class="field-icon">▦</span><span class="visually-hidden">Category</span><select name="category" aria-label="Category"><option value="">All disciplines</option>{% for item in categories %}<option value="{{ item.category }}" {% if filters.category == item.category %}selected{% endif %}>{{ item.category }}</option>{% endfor %}</select></label>
+      <button class="button button-dark search-submit" type="submit">Find your role <span aria-hidden="true">↗</span></button>
+    </form>
+    <div class="search-foot"><span>Curated roles, considered teams.</span><a href="{{ url_for('index') }}">Reset filters <span aria-hidden="true">↻</span></a></div>
+  </div>
+</section>
+<section class="jobs-section" id="open-roles">
+  <div class="container">
+    <div class="section-heading">
+      <div><p class="eyebrow">THE OPPORTUNITY BOARD</p><h2>Open roles <span class="count-pill">{{ jobs|length }}</span></h2></div>
+      <p class="section-aside">A few good next steps.<br>For wherever you are headed.</p>
+    </div>
+    {% if jobs %}
+      <div class="job-list">
+        {% for job in jobs %}
+          <article class="job-row">
+            <div class="job-company-mark mark-{{ loop.index0 % 5 }}">{{ job.company[0]|upper }}</div>
+            <div class="job-main"><p class="job-company">{{ job.company }} <span class="company-separator">/</span> <span>{{ job.category }}</span></p><h3><a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.title }}</a></h3><p class="job-meta">{{ job.location }} <span>·</span> {{ job.employment_type }}</p></div>
+            <div class="job-aside"><span class="job-salary">{{ job.salary or 'Compensation discussed' }}</span><a class="row-arrow" href="{{ url_for('job_detail', job_id=job.id) }}" aria-label="View {{ job.title }}">↗</a></div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state"><span class="empty-mark">⌕</span><h3>No roles found just yet.</h3><p>Try another keyword or clear a filter to see more opportunities.</p><a class="button button-outline" href="{{ url_for('index') }}">Clear search</a></div>
+    {% endif %}
+    <div class="board-bottom"><span>Showing {{ jobs|length }} role{{ '' if jobs|length == 1 else 's' }}</span><span>Updated as good work comes in <span aria-hidden="true">✳</span></span></div>
+  </div>
+</section>
+<section class="employer-band"><div class="container employer-inner"><div><p class="eyebrow">BUILDING A TEAM?</p><h2>Make the next hire<br>feel like the right one.</h2></div><div class="employer-action"><p>Put your opening in front of people looking for work with purpose.</p><a class="button button-coral" href="{{ url_for('register') }}">Post a role <span aria-hidden="true">↗</span></a></div><span class="employer-asterisk" aria-hidden="true">✳</span></div></section>
+{% endblock %}

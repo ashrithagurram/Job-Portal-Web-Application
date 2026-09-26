@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}{{ 'Create an account' if mode == 'register' else 'Sign in' }} | Commonplace Careers{% endblock %}
+{% block content %}
+<section class="auth-section"><div class="auth-panel"><div class="auth-intro"><p class="eyebrow">{{ 'YOUR NEXT CHAPTER' if mode == 'register' else 'WELCOME BACK' }}</p><h1>{{ 'Find your' if mode == 'register' else 'Good to see' }}<br><em>{{ 'commonplace.' if mode == 'register' else 'you again.' }}</em></h1><p>{{ 'A thoughtful place to find work that feels like yours.' if mode == 'register' else 'Pick up right where your next move begins.' }}</p></div>
+  <form class="form-panel" method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {% if mode == 'register' %}
+      <label class="form-label" for="name">Your name</label><input class="form-control" id="name" name="name" autocomplete="name" required maxlength="100" value="{{ request.form.get('name', '') }}">
+    {% endif %}
+    <label class="form-label" for="email">Email address</label><input class="form-control" id="email" name="email" type="email" autocomplete="email" required value="{{ request.form.get('email', '') }}">
+    <label class="form-label" for="password">Password</label><input class="form-control" id="password" name="password" type="password" autocomplete="{{ 'new-password' if mode == 'register' else 'current-password' }}" minlength="8" required>
+    {% if mode == 'register' %}
+      <fieldset class="account-type"><legend class="form-label">I am here to</legend><label class="role-option"><input type="radio" name="role" value="seeker" checked><span class="role-radio"></span><span><strong>Find a role</strong><small>Search and apply for work</small></span></label><label class="role-option"><input type="radio" name="role" value="employer"><span class="role-radio"></span><span><strong>Build a team</strong><small>Post and manage openings</small></span></label></fieldset>
+      <div class="company-field"><label class="form-label" for="company">Company name</label><input class="form-control" id="company" name="company" autocomplete="organization" value="{{ request.form.get('company', '') }}" placeholder="Shown on your job listings"></div>
+    {% endif %}
+    <button class="button button-dark w-100 form-submit" type="submit">{{ 'Create account' if mode == 'register' else 'Sign in' }} <span aria-hidden="true">↗</span></button>
+    <p class="form-switch">{{ 'Already have an account?' if mode == 'register' else 'New around here?' }} <a href="{{ url_for('login' if mode == 'register' else 'register') }}">{{ 'Sign in' if mode == 'register' else 'Create an account' }}</a></p>
+  </form>
+</div></section>
+{% endblock %}
